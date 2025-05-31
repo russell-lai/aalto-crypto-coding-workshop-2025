@@ -214,6 +214,8 @@
       \pcreturn \ctxt
     }
     \procedure[]{$\dec(\sk, \ctxt)$}{
+      \tilde{\vec{m}} \coloneqq \vec{d} - \mat{S} \vec{c} \bmod q \\
+      \vec{m} \coloneqq \left\lfloor \frac{p}{q} \cdot \tilde{\vec{m}} \right\rceil \bmod p \\ 
       \pcreturn \vec{m}
     }
   \end{pchstack}
