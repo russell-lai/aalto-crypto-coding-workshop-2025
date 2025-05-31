@@ -86,7 +86,9 @@
 \newcommand{\ctxt}{\mathsf{ctxt}}
 \newcommand{\conductor}{\mathfrak{f}}
 
-\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}[definition]{Theorem}
+
 % %% PLOTS 
 
 % \usepackage{tikz,pgfplots}
@@ -188,9 +190,9 @@
 
 \maketitle
 
-\begin{abstract}
-  We do stuff.
-\end{abstract}
+% \begin{abstract}
+%   We do stuff.
+% \end{abstract}
 
 \section{Introduction}
 
@@ -203,6 +205,37 @@ Then, we estimate the required parameters and implement it.
   \item $\ring$: Cyclotomic ring with conductor $\conductor$ and degree $\varphi = \varphi(\conductor)$
   \item $\gamma$: $\ell_2$-coefficient norm ring expansion factor 
 \end{itemize}
+
+\begin{definition}[$\LWE{}$ assumption]
+  The $\LWE{\ring,n,m,q,\chi_0,\chi_1}$ assumption states that the following distributions are computationally indistinguishable: 
+  \begin{align*}
+    \set{
+      \begin{aligned}
+      &(\mat{A}, \vec{b}) \in \ring_q^{n \times m} \times \ring_q^m  \\ 
+      \midrule 
+      &\quad 
+      \begin{aligned}
+        &\mat{A} \sample \ring_q^{n \times m} \\
+        &\vec{s} \sample \ddv_{\ring,\chi_0}^s \\
+        &\vec{e} \sample \ddv_{\ring,\chi_1}^m \\
+        &\vec{b}^\transpose \coloneqq \vec{s}^\transpose \mat{A} + \vec{e}^\transpose \bmod q
+      \end{aligned}
+      \end{aligned}
+    }
+    && \text{and} && 
+    \set{
+      \begin{aligned}
+      &(\mat{A}, \vec{b}) \in \ring_q^{n \times m} \times \ring_q^m  \\ 
+      \midrule 
+      &\quad 
+      \begin{aligned}
+        &\mat{A} \sample \ring_q^{n \times m} \\
+        &\vec{b} \sample \ring_q^m
+      \end{aligned}
+      \end{aligned}
+    }
+  \end{align*}
+\end{definition}
 
 \section{Regev/Lindner-Peikert Encryption}
 
@@ -237,11 +270,12 @@ Then, we estimate the required parameters and implement it.
 \end{theorem}
 
 \begin{theorem}
-  If the $\LWE{...}$ and $\LWE{...}$ assumptions hold, then the above PKE scheme is IND-CPA-secure.
+  If the $\LWE{\ring,n,n,q,s,s}$ and $\LWE{\ring,n+\ell,n,q,s,s}$ assumptions hold, then the above PKE scheme is IND-CPA-secure.
 \end{theorem}
 
 \begin{proof}
-  ...
+  By the $\LWE{\ring,n,n,q,s,s}$ assumption, $\pk = (\mat{A}, \mat{B})$ is indistinguishable from uniform.
+  Then, by the $\LWE{\ring,n+\ell,n,q,s,s}$ assumption, $\ctxt = (\vec{c}, \vec{d})$ is indistinguishable from uniform.
 \end{proof}
 
 
