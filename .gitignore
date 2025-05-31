@@ -1,0 +1,8 @@
+*.synctex.gz
+/main.pdf
+*.out
+*.log
+*.fls
+*.fdb_latexmk
+*.auxlock
+*.aux

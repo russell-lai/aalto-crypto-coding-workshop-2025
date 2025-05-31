@@ -1,0 +1,228 @@
+\documentclass[a4paper,10pt]{article}
+
+%% CONFIG
+
+\IfFileExists{./.config.tex}{
+\input{.config}
+}
+{
+\def\isanonymous{0}
+\def\isfullversion{1}
+\def\buildexternal{1}
+}
+
+%% There is a package that you should include first: nag. Why first? Because it warns you about
+%% obsolete commands and package. https://daniel-j-h.github.io/post/latex-a-modern-approach/
+\usepackage[l2tabu,orthodox]{nag}
+
+%% MISC PACKAGES
+
+\usepackage{microtype}
+\usepackage[bookmarksdepth=2,backref]{hyperref}
+\usepackage{booktabs}  %% tables
+\usepackage{comment}
+\usepackage[inline]{enumitem}
+\usepackage{nicematrix}
+
+%% LINE NUMBERS
+
+\usepackage{lineno}
+\linenumbers{}
+
+%% TODO NOTES
+
+\usepackage[draft]{comments-bugs-todos}
+\NewDocumentCommand\iwoo{s m o}{\IfBooleanTF{#1}{\cmnt*{iwoo}{#2}}{\cmnt{iwoo}{#2}[#3]}}
+
+%% ANONYMOUS SUBMISSIONS
+
+\usepackage{ifthen}
+\newcommand{\anonymous}[2]{%
+\ifthenelse{\equal{\isanonymous}{1}}%
+{#1}%
+{#2}%
+}%
+
+\newcommand{\fullversion}[2]{%
+\ifthenelse{\equal{\isfullversion}{1}}%
+{#1}%
+{#2}%
+}%
+
+%% SYMBOLS & NOTATION
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{xspace}
+\usepackage[lambda,landau,operators,probability,sets,adversary,logic,ff,primitives,complexity,oracles,asymptotics,keys]{cryptocode}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}\xspace}
+\newcommand{\mat}[1]{\ensuremath{\mathbf{#1}}\xspace}
+\newcommand{\ring}{\mathcal{R}}
+\newcommand{\field}{\mathcal{K}}
+\newcommand{\lattice}{\mathcal{L}}
+\newcommand{\inner}[2]{\langle #1, #2 \rangle}
+\newcommand{\transpose}{\mathtt{T}}
+\newcommand{\tuple}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\diag}[1]{\ensuremath{\mathsf{diag}\left(#1\right)}}
+\newcommand{\Span}{\mathsf{span}}
+
+\newcommand{\TrapGen}{\mathsf{TrapGen}}
+\newcommand{\SampPre}{\mathsf{SampPre}}
+\newcommand{\Hyb}{\mathsf{Hyb}}
+
+\newcommand{\SIS}[1]%
+{\ifthenelse{\equal{#1}{}}%
+  {\ensuremath{\mathsf{SIS}}}%
+  {\ensuremath{\mathsf{SIS}_{\/#1}}}%
+  \xspace%
+}
+\newcommand{\LWE}[1]%
+{\ifthenelse{\equal{#1}{}}%
+  {\ensuremath{\mathsf{LWE}}}%
+  {\ensuremath{\mathsf{LWE}_{\/#1}}}%
+  \xspace%
+}
+
+
+% %% PLOTS 
+
+% \usepackage{tikz,pgfplots}
+% \pgfplotsset{compat=newest}
+% \usetikzlibrary{calc}
+% \usetikzlibrary{arrows}
+
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=plots/]
+% \tikzset{external/optimize=false}
+% \tikzset{external/export=false}
+
+% \newcommand{\tikzexternalizemaybe}{%
+%   \ifthenelse{\equal{\buildexternal}{1}}%
+%   {\tikzset{external/export=true}}%
+%   {\tikzset{external/export=false}%
+% }}%
+
+% % from pgfplotsthemetol.sty
+% \definecolor{DarkPurple}{HTML}{332288}
+% \definecolor{DarkBlue}{HTML}{6699CC}
+% \definecolor{LightBlue}{HTML}{88CCEE}
+% \definecolor{DarkGreen}{HTML}{117733}
+% \definecolor{DarkRed}{HTML}{661100}
+% \definecolor{LightRed}{HTML}{CC6677}
+% \definecolor{LightPink}{HTML}{AA4466}
+% \definecolor{DarkPink}{HTML}{882255}
+% \definecolor{LightPurple}{HTML}{AA4499}
+% \definecolor{DarkBrown}{HTML}{604c38}
+% \definecolor{DarkTeal}{HTML}{23373b}
+% \definecolor{LightBrown}{HTML}{EB811B}
+% \definecolor{LightGreen}{HTML}{14B03D}
+
+% \pgfplotsset{width=1.0\textwidth,
+%   height=0.45\textwidth,
+%   cycle list={%
+%     solid,\\%
+%     dotted,DarkBlue,very thick\\%
+%     dashed,DarkGreen,thick\\%
+%     loosely dotted,very thick,DarkRed\\%
+%     loosely dashed,black,very thick,DarkBrown\\%
+%     loosely dashdotted,darkgray,very thick,DarkTeal\\%
+%     \\%
+%   },
+%   legend pos=north west,
+%   legend style={fill=none},
+%   legend cell align={left}}
+
+
+% %% LISTINGS
+%
+% \usepackage{listings}
+% \lstdefinelanguage{Sage}[]{Python}{morekeywords={True,False,sage,cdef,cpdef,ctypedef,self},sensitive=true}
+% \lstset{frame=none,
+%           showtabs=False,
+%           showspaces=False,
+%           showstringspaces=False,
+%           commentstyle=\color{gray!80!black},
+%           keywordstyle={\color{gray!80!black}\textbf},
+%           stringstyle ={\color{gray!80!black}},
+%           basicstyle=\tt\small\relax,,
+%         }
+%
+% \usepackage{navigator}
+        
+%% PDF SETUP
+
+\usepackage{fullpage}
+\pagestyle{plain}
+\hypersetup{colorlinks=true,citecolor=darkgray,linkcolor=darkgray}
+\allowdisplaybreaks
+
+%% REFERENCES
+\usepackage[capitalize]{cleveref}
+
+\DeclareRobustCommand{\abbrevcrefs}{%
+\crefname{lemma}{Lem.}{Lems.}%
+\crefname{corollary}{Cor.}{Cors.}%
+\crefname{theorem}{Thm.}{Thms.}%
+}
+
+\DeclareRobustCommand{\cshref}[1]{{\abbrevcrefs\cref{#1}}}
+
+
+%% OPENING
+
+
+\title{Coding Workshop 2025}
+
+\anonymous{}{
+{
+  \author{Aalto Crypto Group}
+}
+  % \institute{%
+	% }
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  We do stuff.
+\end{abstract}
+
+
+\section{Regev/Lindner-Peikert Encryption}
+
+\begin{figure}[h]
+  \begin{pchstack}[center,boxed,space=1em]
+    \procedure[]{$\kgen(\secparam)$}{
+      \mat{A} \sample \ring_q^{n \times n} \\
+      \vec{s}, \vec{e} \sample \ddv_{\ring,s}^n \\ 
+      \vec{b} \coloneqq \vec{s}^\transpose \mat{A} + \vec{e}^\transpose \bmod q \in \ring_q^n \\ 
+      \pk \coloneqq (\mat{A},\vec{b}) \\ 
+      \sk \coloneqq \vec{s}
+    }
+    \procedure[]{$\enc(\secparam)$}{
+      \mat{A} \sample \ring_q^{n \times n} \\
+      \vec{s}, \vec{e} \sample \ddv_{\ring,s}^n \\ 
+      \vec{b} \coloneqq \vec{s}^\transpose \mat{A} + \vec{e}^\transpose \bmod q \in \ring_q^n
+    }
+  \end{pchstack}
+\end{figure}
+
+
+\clearpage
+\bibliographystyle{alpha}
+\bibliography{abbrev3,crypto,local}
+
+\appendix
+\clearpage
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-command-extra-options: "-shell-escape"
+%%% eval: (add-hook 'after-save-hook (lambda nil (interactive) (save-window-excursion (when (and (fboundp 'reftex-toc-rescan) (eq major-mode 'latex-mode)) (reftex-toc-rescan)))) 0 t)
+%%% End:
