@@ -83,6 +83,8 @@
   \xspace%
 }
 
+\newcommand{\ctxt}{\mathsf{ctxt}}
+
 
 % %% PLOTS 
 
@@ -196,15 +198,23 @@
   \begin{pchstack}[center,boxed,space=1em]
     \procedure[]{$\kgen(\secparam)$}{
       \mat{A} \sample \ring_q^{n \times n} \\
-      \vec{s}, \vec{e} \sample \ddv_{\ring,s}^n \\ 
-      \vec{b} \coloneqq \vec{s}^\transpose \mat{A} + \vec{e}^\transpose \bmod q \in \ring_q^n \\ 
-      \pk \coloneqq (\mat{A},\vec{b}) \\ 
-      \sk \coloneqq \vec{s}
+      \mat{S}, \mat{E} \sample \ddv_{\ring,s}^{\ell \times n} \\
+      \mat{B} \coloneqq \mat{S} \mat{A} + \mat{E} \bmod q \in \ring_q^{\ell \times n} \\ 
+      \pk \coloneqq (\mat{A}, \mat{B}) \\ 
+      \sk \coloneqq \vec{s} \\ 
+      \pcreturn (\pk, \sk)
     }
-    \procedure[]{$\enc(\secparam)$}{
-      \mat{A} \sample \ring_q^{n \times n} \\
-      \vec{s}, \vec{e} \sample \ddv_{\ring,s}^n \\ 
-      \vec{b} \coloneqq \vec{s}^\transpose \mat{A} + \vec{e}^\transpose \bmod q \in \ring_q^n
+    \procedure[]{$\enc(\pk, \vec{m} \in \ring_p^\ell)$}{
+      \vec{r} \sample \ddv_{\ring,s}^n \\
+      \vec{f} \sample \ddv_{\ring,s}^n \\
+      \vec{g} \sample \ddv_{\ring,s}^\ell \\
+      \vec{c} \coloneqq \mat{A} \vec{r} + \vec{f} \bmod q \in \ring_q^n \\
+      \vec{d} \coloneqq \mat{B} \vec{r} + \vec{g} + \floor{\frac{q}{p}} \cdot \vec{m} \bmod q \in \ring_q^\ell \\
+      \ctxt \coloneqq (\vec{c}, \vec{d}) \in \ring_q^n \times \ring_q^\ell \\ 
+      \pcreturn \ctxt
+    }
+    \procedure[]{$\dec(\sk, \ctxt)$}{
+      \pcreturn \vec{m}
     }
   \end{pchstack}
 \end{figure}
