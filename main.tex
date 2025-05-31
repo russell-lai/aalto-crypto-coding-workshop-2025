@@ -51,7 +51,7 @@
 
 %% SYMBOLS & NOTATION
 
-\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
 \usepackage{xspace}
 \usepackage[lambda,landau,operators,probability,sets,adversary,logic,ff,primitives,complexity,oracles,asymptotics,keys]{cryptocode}
 
@@ -86,7 +86,7 @@
 \newcommand{\ctxt}{\mathsf{ctxt}}
 \newcommand{\conductor}{\mathfrak{f}}
 
-
+\newtheorem{theorem}{Theorem}
 % %% PLOTS 
 
 % \usepackage{tikz,pgfplots}
@@ -231,6 +231,18 @@ Then, we estimate the required parameters and implement it.
     }
   \end{pchstack}
 \end{figure}
+
+\begin{theorem}
+  If $q \geq ...$ then the above PKE scheme is correct.
+\end{theorem}
+
+\begin{theorem}
+  If the $\LWE{...}$ and $\LWE{...}$ assumptions hold, then the above PKE scheme is IND-CPA-secure.
+\end{theorem}
+
+\begin{proof}
+  ...
+\end{proof}
 
 
 \clearpage
