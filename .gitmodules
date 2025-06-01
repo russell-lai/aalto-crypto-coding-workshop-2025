@@ -1,3 +1,3 @@
-[submodule "estimator/estimator"]
-	path = estimator/estimator
+[submodule "estimator/lattice-estimator"]
+	path = estimator/lattice-estimator
 	url = ../../malb/lattice-estimator.git
