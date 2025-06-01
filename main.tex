@@ -204,8 +204,8 @@ Finally, we implement the scheme.
 
 \begin{itemize}
   \item $\ring$: Cyclotomic ring with conductor $\conductor$ and degree $\varphi = \varphi(\conductor)$. We will assume that $\conductor$ is a power of two.
-  \item $\gamma \leq \varphi$: $\ell_\infty$-coefficient norm ring expansion factor 
-  % \item $\ddv_{\ring,s}$: Gaussian distribution over $\ring$ with parameter $s$ w.r.t. $\ell_2$-coefficient norm
+  \item $\norm{\cdot}$: The coefficient $\ell_\infty$-norm
+  \item $\gamma \leq \varphi$: coefficient $\ell_\infty$-norm ring expansion factor 
 \end{itemize}
 
 \begin{definition}[$\LWE{}$ assumption]
@@ -268,37 +268,46 @@ Finally, we implement the scheme.
 \end{figure}
 
 \begin{theorem}
-  If $q \geq ...$ then the above PKE scheme is correct.
-\end{theorem}
-
-\begin{theorem}
-  If the $\LWE{\ring,n,n,q,s,s}$ and $\LWE{\ring,n+\ell,n,q,s,s}$ assumptions hold, then the above PKE scheme is IND-CPA-secure.
+  Let $\chi$ be any distribution over $\ring_{2b+1}$ for some $b \in \NN$.
+  If $q \geq 4 p \varphi n b^2 + 2 p b$ then the above PKE scheme is correct.
 \end{theorem}
 
 \begin{proof}
-  By the $\LWE{\ring,n,n,q,s,s}$ assumption, $\pk = (\mat{A}, \mat{B})$ is indistinguishable from uniform.
-  Then, by the $\LWE{\ring,n+\ell,n,q,s,s}$ assumption, $\ctxt = (\vec{c}, \vec{d})$ is indistinguishable from uniform.
+  Note that $\tilde{\vec{m}} = \vec{d} - \mat{S} \vec{c} = \floor{\frac{q}{p}} \cdot \vec{m} + \mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f} \bmod q$.
+  Decryption is correct as long as $\norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} < \frac{q}{2p}$.
+  Note that $\norm{\mat{S}}, \norm{\mat{E}}, \norm{\vec{f}}, \norm{\vec{g}} \leq b$, hence $\norm{\mat{E} \vec{r}}, \norm{\mat{S} \vec{f}} \leq \gamma n b^2$.
+  Also, $\gamma \leq \varphi$.
+  Therefore, $\norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} \leq 2 \varphi n b^2 + b < \frac{q}{2p}$.
+\end{proof}
+
+\begin{theorem}
+  If the $\LWE{\ring,n,n,q,\chi,\chi}$ and $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ assumptions hold, then the above PKE scheme is IND-CPA-secure.
+\end{theorem}
+
+\begin{proof}
+  By the $\LWE{\ring,n,n,q,\chi,\chi}$ assumption, $\pk = (\mat{A}, \mat{B})$ is indistinguishable from uniform.
+  Then, by the $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ assumption, $\ctxt = (\vec{c}, \vec{d})$ is indistinguishable from uniform.
 \end{proof}
 
 \section{Parameter Estimation}
 
 We use the Lattice Estimator to estimate parameters of the scheme. 
-Note that the Lattice Estimator ignores the ring structure of $\LWE{}$ over $\ring$, i.e. $\LWE{\ring,n,m,q,\chi_0,\chi_1}$ is treated as $\LWE{\ZZ,\varphi n,\varphi m,q,\chi_0,\chi_1}$.
-Our task is to pick $\varphi, n, \ell, p, q, s$ such that: 
+Note that the Lattice Estimator ignores the ring structure of $\LWE{}$ over $\ring$, i.e. $\LWE{\ring,n,m,q,\chi,\chi}$ is treated as $\LWE{\ZZ,\varphi n,\varphi m,q,\chi,\chi}$.
+Our task is to pick $\varphi, n, \ell, p, q, \chi$ such that: 
 \begin{itemize}
   \item The message space is at least $2^{256}$.
   \item The correctness bound holds. 
-  \item $\LWE{\ring,n,n,q,s,s}$ and $\LWE{\ring,n+\ell,n,q,s,s}$ each have at least 128-bit estimated security. 
+  \item $\LWE{\ring,n,n,q,\chi,\chi}$ and $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ each have at least 128-bit estimated security.  Note that 
 \end{itemize}
 
 We will fix $\varphi = 256$, $\ell = 1$ and $p = 2$, so that the message space is $|\ring_p^\ell| = 2^{256}$.
-To pick $n, q, s$, we will use the following strategy: 
+We fix $\chi$ to be the uniform distribution over $\ring_3$ (i.e. $b = 1$).  
+To pick $n, q$, we will use the following strategy: 
 \begin{enumerate}
   \item Pick a candidate $n$.
-  \item Pick $s$ just large enough so that $s \geq \eta_{2^{-128}}(\ring)$. This means picking $s = \sqrt{\ln(2\varphi (1+2^{128}))/\pi}$. 
-  \item Pick $q$ just large enough so that the correctness bound is satisfied. This means picking $q = ...$.   
-  \item Run the Lattice Estimator on $\LWE{\ring,n,n,q,s,s}$ and $\LWE{\ring,n+\ell,n,q,s,s}$.
-  \item If both instances have at least 128-bit estimated security, we are done. Otherwise, repeat Step 1 with a bigger $n$.
+  \item Pick $q$ just large enough so that the correctness bound is satisfied. This means picking $q = 8 \varphi n + 5$. 
+  \item Run the Lattice Estimator on $\LWE{\ring,n,n+\ell,q,\chi,\chi}$. (There is no need to run the Lattice Estimator on $\LWE{\ring,n,n,q,\chi,\chi}$ because it is no easier that $\LWE{\ring,n,n+\ell,q,\chi,\chi}$.)
+  \item If $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ has at least 128-bit estimated security, we are done. Otherwise, repeat Step 1 with a bigger $n$.
 \end{enumerate}
 
 
