@@ -270,6 +270,7 @@ Finally, we implement the scheme.
 \begin{theorem}
   Let $\chi$ be any distribution over $\ring_{2b+1}$ for some $b \in \NN$.
   If $q \geq 4 p \varphi n b^2 + 2 p b$ then the above PKE scheme is correct.
+  The ciphertext size is $|\ctxt| = \varphi (n+\ell) \log q$ bits.
 \end{theorem}
 
 \begin{proof}
@@ -300,8 +301,8 @@ Our task is to pick $\varphi, n, \ell, p, q, \chi$ such that:
   \item $\LWE{\ring,n,n,q,\chi,\chi}$ and $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ each have at least 128-bit estimated security.  Note that 
 \end{itemize}
 
-We will fix $\varphi = 256$, $\ell = 1$ and $p = 2$, so that the message space is $|\ring_p^\ell| = 2^{256}$.
-We fix $\chi$ to be the uniform distribution over $\ring_3$ (i.e. $b = 1$).  
+We will fix $\conductor = 512$, $\varphi = 256$, $\ell = 1$ and $p = 2$, so that the message space is $|\ring_p^\ell| = 2^{256}$.
+We fix $\chi$ to be the centred binomial distribution with parameter $b = 1$, i.e. a sample is the difference between two uniformly random samples from $\ring_2$.
 To pick $n, q$, we will use the following strategy: 
 \begin{enumerate}
   \item Pick a candidate $n$.
@@ -310,6 +311,26 @@ To pick $n, q$, we will use the following strategy:
   \item If $\LWE{\ring,n,n+\ell,q,\chi,\chi}$ has at least 128-bit estimated security, we are done. Otherwise, repeat Step 1 with a bigger $n$.
 \end{enumerate}
 
+The above logic is implemented in \texttt{code/pke\_params.py} which provides a function \texttt{gen\_pke\_params}. 
+A convenient way to play with it is to use a Jupyter notebook.
+For that, run \texttt{code/gen\_params.ipynb}.
+
+We obtain the following set of parameters: 
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lcc}
+    Security & $\secpar$ & $129$  \\
+    Conductor & $\conductor$ & $512$  \\
+    Degree & $\varphi$ & $256$  \\
+    Module rank & $n$ & $2$ \\ 
+    Ciphertext modulus & $q$ & $4101 \approx 2^{13}$ \\ 
+    Plaintext dimension & $\ell$ & $1$ \\
+    Plaintext modulus & $p$ & $2$ \\ 
+    Ciphertext size & $|\ctxt|$ & $1.1$ KB
+  \end{tabular}
+  \caption{Example parameters of the PKE scheme.}
+\end{table}
 
 \clearpage
 \bibliographystyle{alpha}
