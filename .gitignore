@@ -6,3 +6,7 @@ note/main.pdf
 *.fdb_latexmk
 *.auxlock
 *.aux
+*.cpython-312.pyc
+*checkpoint.ipynb
+*checkpoint.py
+*.cpython-313.pyc

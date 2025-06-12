@@ -4,7 +4,7 @@ sys.path.append('./lattice-estimator')
 
 from estimator import LWE, ND
 from estimator.nd import sigmaf,stddevf
-from sage.all import var, log, ceil, floor, sqrt, Infinity, euler_phi, round, pi, n
+from sage.all import var, log, ceil, floor, sqrt, Infinity, euler_phi, round, pi, n, next_prime
 import os
 
 class HiddenPrints:
@@ -54,7 +54,7 @@ class PKEParams:
     p: int # message modulus
 
     def __repr__(self):
-        return f"PKE( secpar: {self.secpar:3d}, f: {self.f:3d}, phi: {self.phi():3d}, n: {self.n:1d}, q: 2^{ceil(log(self.q,2)):2d}, ell: {self.ell: 1d}, |ct|: {self.ct():6s} )"
+        return f"PKE( secpar: {self.secpar:3d}, f: {self.f:3d}, phi: {self.phi():3d}, n: {self.n:1d}, q: {self.q}, approx.q: 2^{(log(self.q,2).n()):5.2f}, ell: {self.ell: 1d}, |ct|: {self.ct():6s} )"
 
     def phi(self):
         return euler_phi(self.f)
@@ -103,4 +103,5 @@ def gen_pke_params(secpar, f, base_n = 1, ell = 1, p = 2, b = 2):
         ):
             pke = PKEParams(min_lwe_cost, f, n, q, ell, p)
             print(f"{pke}")
+            print(f'next smallest prime q: {next_prime(q)}')
             return pke
