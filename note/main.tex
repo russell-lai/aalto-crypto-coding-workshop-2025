@@ -88,6 +88,7 @@
 
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
 
 % %% PLOTS 
 
@@ -269,16 +270,55 @@ Finally, we implement the scheme.
 
 \begin{theorem}
   Let $\chi$ be any distribution over $\ring_{2b+1}$ for some $b \in \NN$.
-  If $q \geq 4 p \varphi n b^2 + 2 p b$ then the above PKE scheme is correct.
+  If $q \geq p^2/2 + 4 p \varphi n b^2 + 2 p b$ then the above PKE scheme is correct.
   The ciphertext size is $|\ctxt| = \varphi (n+\ell) \log q$ bits.
 \end{theorem}
 
 \begin{proof}
-  Note that $\tilde{\vec{m}} = \vec{d} - \mat{S} \vec{c} = \floor{\frac{q}{p}} \cdot \vec{m} + \mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f} \bmod q$.
-  Decryption is correct as long as $\norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} < \frac{q}{2p}$.
+  Note that 
+  \[
+    \tilde{\vec{m}} = \vec{d} - \mat{S} \vec{c} = \floor{\frac{q}{p}} \cdot \vec{m} + \underbrace{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}}_{\coloneqq \vec{e}^*} \bmod~q.
+  \]
+  Decryption is correct as long as %$\norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} < \frac{q}{2p}$.
+  $\abs{ \frac{p}{q} \cdot \tilde{\vec{m}} - \vec{m} } \leq \frac{1}{2}$,
+  equivalently 
+  \begin{align*}
+    \abs{ \frac{p}{q} \cdot \floor{\frac{q}{p}} \cdot \vec{m} + \frac{p}{q} \cdot \vec{e}^* - \vec{m} } 
+    = \abs{ \left(\frac{p}{q} \cdot \floor{\frac{q}{p}} - 1\right) \cdot \vec{m} + \frac{p}{q} \cdot \vec{e}^* } \leq \frac{1}{2}. 
+  \end{align*}
+  The above is implied by 
+  \[ \abs{ \frac{p}{2q} \cdot \vec{m} + \frac{p}{q} \cdot \vec{e}^* } \leq \frac{1}{2} \]
+  because of \cref{lem:elementary}, which is further implied by 
+  \[
+    \abs{ \frac{p^2}{4q} + \frac{p}{q} \cdot \vec{e}^* } \leq \frac{1}{2}
+  \]
+  since each element of $\vec{m}$ is in $\ring_p$. 
+  For the above to hold, it suffices to have 
+  \begin{align}\label{eq:correctness}
+    \frac{q}{2} \geq \frac{p^2}{4} + p \cdot \norm{\vec{e}^*}.  
+  \end{align}
   Note that $\norm{\mat{S}}, \norm{\mat{E}}, \norm{\vec{f}}, \norm{\vec{g}} \leq b$, hence $\norm{\mat{E} \vec{r}}, \norm{\mat{S} \vec{f}} \leq \gamma n b^2$.
   Also, $\gamma \leq \varphi$.
-  Therefore, $\norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} \leq 2 \varphi n b^2 + b < \frac{q}{2p}$.
+  Therefore, $\norm{\vec{e}^*} = \norm{\mat{E} \vec{r} + \vec{g} - \mat{S} \vec{f}} \leq 2 \varphi n b^2 + b$, and \cref{eq:correctness} is satisfied by the $q$ in the theorem statement.
+\end{proof}
+
+\begin{lemma}\label{lem:elementary}
+  For any $p,q \in \NN$, it holds that $\abs{\frac{p}{q} \cdot \floor{\frac{q}{p}} -1} \leq \frac{p}{2q}$.
+\end{lemma}
+
+\begin{proof}
+  Write $\set{\frac{q}{p}} \coloneqq \frac{q}{p} - \floor{\frac{q}{p}}$ for the fractional part of $\frac{p}{q}$.
+  The claim holds iff 
+  \begin{align*}
+    -\frac{p}{2q} \leq \frac{p}{q} \cdot \floor{\frac{q}{p}} -1 \leq \frac{p}{2q} 
+    \iff~& 
+    1-\frac{p}{2q} \leq \frac{p}{q} \cdot \left( \frac{q}{p} - \set{\frac{q}{p}} \right) \leq 1+\frac{p}{2q} \\
+    \iff~&
+    1-\frac{p}{2q} \leq 1 - \frac{p}{q} \cdot  \set{\frac{q}{p}} \leq 1+\frac{p}{2q} \\
+    \iff~&
+    -\frac{p}{2q} \leq \frac{p}{q} \cdot \set{\frac{q}{p}} \leq \frac{p}{2q} 
+  \end{align*}
+  where the last line always holds since $-\frac{1}{2} \leq \set{\frac{q}{p}} \leq \frac{1}{2}$.
 \end{proof}
 
 \begin{theorem}
